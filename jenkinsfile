@@ -11,11 +11,7 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
+
 
         stage('Checkout from Git') {
             steps {
@@ -38,6 +34,8 @@ pipeline {
                         -Dsonar.projectName=Panigrahan-karthik \
                         -Dsonar.sources=.
                     """
+
+                    
                 }
             }
         }
