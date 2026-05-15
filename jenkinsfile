@@ -19,7 +19,13 @@ pipeline {
 
         stage('Checkout from Git') {
             steps {
-                git branch: 'master', url: 'https://github.com/smita1988/project-swiggy.git'
+                git branch: 'master', url: 'https://github.com/karmr-10/Swiggy-app.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
             }
         }
 
@@ -28,8 +34,8 @@ pipeline {
                 withSonarQubeEnv('sonar') {
                     sh """
                         $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectKey=Swiggy \
-                        -Dsonar.projectName=Swiggy \
+                        -Dsonar.projectKey=Panigrahan-karthik \
+                        -Dsonar.projectName=Panigrahan-karthik \
                         -Dsonar.sources=.
                     """
                 }
@@ -46,34 +52,7 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh "npm install"
-            }
-        }
-
-        stage('Docker Build & Push') {
-            steps {
-                script {
-                    withDockerRegistry(credentialsId: 'docker-credentails', url: '') {
-                        sh """
-                            docker build -t swiggy .
-                            docker tag swiggy iamsubbu3/swiggy:latest
-                            docker push iamsubbu3/swiggy:latest
-                        """
-                    }
-                }
-            }
-        }
-
-        stage('Deploy to Container') {
-            steps {
-                sh '''
-                    docker rm -f swiggy || true
-                    docker run -d --name swiggy -p 3000:3000 iamsubbu3/swiggy:latest
-                '''
-            }
-        }
+        
     }
 
     post {
