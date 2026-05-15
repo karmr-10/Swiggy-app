@@ -1,23 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
-  name: swiggy-metadata
-  namespace: karthik
-  labels:
-    app: swiggy-testapp
+  name: swiggy-app
+  namespace: poojitha
+
 spec:
   replicas: 2
+
   selector:
     matchLabels:
-      app: swiggy-testapp
+      app: swiggy-app
+
   template:
     metadata:
       labels:
-        app: swiggy-testapp
+        app: swiggy-app
+
     spec:
       containers:
-      - name: swiggy-testapp
+      - name: swiggy-app
         image: dockkart2025/swiggy:latest
-        imagePullPolicy: Always
+
+        env:
+        - name: HOST
+          value: "0.0.0.0"
+
+        - name: PORT
+          value: "5000"
+
         ports:
         - containerPort: 5000
+
+
+
+
