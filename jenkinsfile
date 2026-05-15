@@ -72,7 +72,14 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline execution completed!'
+            sh '''
+            echo "Removing Swiggy Docker images..."
+
+            docker images "swiggy*" -q | xargs -r docker rmi -f || true
+
+            docker image prune -f || true
+            docker builder prune -f || true
+            '''
         }
         success {
             echo 'Panigrahan Web App pipeline completed successfully!'

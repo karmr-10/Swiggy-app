@@ -9,10 +9,11 @@ spec:
   selector:
     app: swiggy-testapp
   ports:
-  - protocol: TCP
-    port: 80  ## service port number
-    targetPort: 5000 ## application port number
-  type: LoadBalancer
+      protocol: TCP
+      port: 5000
+      targetPort: 5000
+      nodePort: 30080
+  type: NodePort
   
 
 
