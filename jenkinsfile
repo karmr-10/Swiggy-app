@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         jdk 'jdk21'
-        nodejs 'node20' // Node.js 20 LTS
+        nodejs 'node20'
     }
 
     environment {
@@ -11,57 +11,59 @@ pipeline {
     }
 
     stages {
-
+        stage('Clean Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
 
         stage('Checkout from Git') {
             steps {
-                git branch: 'master', url: 'https://github.com/karmr-10/Swiggy-app.git'
+                git branch: 'master',
+                    url: 'https://github.com/karmr-10/Swiggy-app.git'
             }
         }
-
+        
         stage('Install Dependencies') {
             steps {
-                sh "npm install"
+                sh 'npm install'
             }
         }
-
+        
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh """
+                    sh '''
                         $SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectKey=Panigrahan-karthik \
                         -Dsonar.projectName=Panigrahan-karthik \
                         -Dsonar.sources=.
-                    """
-
-
+                    '''
                 }
             }
         }
 
-        stage('Quality Gate') {
+        stage('Docker Build and push') {
             steps {
-                script {
-                    timeout(time: 5, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-                    }
+                withDockerRegistry(credentialsId:'docker-credentials', url:'') {
+                    sh '''
+                        docker build -t swiggy:v1.0.1
+                        docker tag swiggy:v1.0.1 dockkart2025/swiggy:v1.0.1
+                        docker push dockkart2025/swiggy:v1.0.1
+                    '''
                 }
             }
-        }
-
-        
     }
 
     post {
         always {
-            echo "Pipeline execution completed!"
-        }
-        failure {
-            echo "Pipeline failed. Check logs for details."
+            echo 'Pipeline execution completed!'
         }
         success {
-            echo "Swiggy App deployed successfully!"
+            echo 'Panigrahan Web App pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check Console Output.'
         }
     }
 }
