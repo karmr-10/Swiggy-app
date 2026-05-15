@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: swiggy-app
+  name: swiggy-app-v1
   namespace: karthik
 
 spec:
@@ -10,16 +10,16 @@ spec:
 
   selector:
     matchLabels:
-      app: swiggy-app
+      app: swiggy-app-v1
 
   template:
     metadata:
       labels:
-        app: swiggy-app
+        app: swiggy-app-v1
 
     spec:
       containers:
-      - name: swiggy-app
+      - name: swiggy-app-v1
         image: manlineroot12/swiggy-app:latest
 
         env:
