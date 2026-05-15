@@ -3,7 +3,7 @@ kind: Deployment
 
 metadata:
   name: swiggy-app
-  namespace: poojitha
+  namespace: karthik
 
 spec:
   replicas: 2
